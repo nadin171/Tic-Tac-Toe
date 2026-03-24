@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-family: sans-serif;
+          margin-top: 50px;
+        }
+
+        #status {
+          margin-bottom: 20px;
+          font-size: 18px;
+          font-weight: bold;
+        }
+
+        #board {
+          display: grid;
+          grid-template-columns: repeat(3, 100px);
+          grid-template-rows: repeat(3, 100px);
+          gap: 5px;
+        }
+
+        .cell {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 36px;
+          font-weight: bold;
+          border: 2px solid #333;
+          cursor: pointer;
+          background-color: #f0f0f0;
+          user-select: none; 
+        }
+
+        .cell:hover {
+          background-color: #e0e0e0;
+        }
+
+        button {
+          margin-top: 20px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    
+  <div id="status">Ходит X</div>
+  <div id="board">
+    <div class="cell" data-index="0"></div>
+    <div class="cell" data-index="1"></div>
+    <div class="cell" data-index="2"></div>
+    <div class="cell" data-index="3"></div>
+    <div class="cell" data-index="4"></div>
+    <div class="cell" data-index="5"></div>
+    <div class="cell" data-index="6"></div>
+    <div class="cell" data-index="7"></div>
+    <div class="cell" data-index="8"></div>
+  </div>
+
+  <button id="restart">Начать игру</button>
+
+  <script>
+    const board = document.querySelector('#board')
+    const cells = document.querySelectorAll('.cell')
+    const status = document.querySelector('#status')
+    const restartBtn = document.querySelector('#restart')
+
+    let currentPlayer = 'X'
+    let gameActive = true
+    let boardState = ['', '', '', '', '', '', '', '', '']
+
+    const winCombos = [
+      [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]
+    ]
+
+    board.addEventListener('click', function (event) {
+      const cell = event.target
+
+      if (!cell.classList.contains('cell')) return
+      if (!gameActive) return
+
+      const index = cell.dataset.index
+
+      if (boardState[index] !== '') return
+
+      boardState[index] = currentPlayer
+      cell.textContent = currentPlayer
+
+      if (checkWin()) {
+        status.textContent = `Победил: ${currentPlayer}`
+        gameActive = false
+        return
+      }
+
+      if (boardState.every(cell => cell !== '')) {
+        status.textContent = 'Ничья'
+        gameActive = false
+        return
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X'
+      status.textContent = `Ходит: ${currentPlayer}`
+    })
+
+
+    function checkWin() {
+      return winCombos.some(combo => {
+        return combo.every(index => boardState[index] === currentPlayer)
+      })
+    }
+
+
+    restartBtn.addEventListener('click', resetGame)
+
+    function resetGame() {
+      boardState = ['', '', '', '', '', '', '', '', '']
+      currentPlayer = 'X'
+      gameActive = true
+      status.textContent = 'Ходит: X'
+
+      cells.forEach(cell => {
+        cell.textContent = ''
+      })
+    }
+  </script>
+</body>
+</html>
