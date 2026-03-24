@@ -1,2 +1,13 @@
-# Tic-Tac-Toe
-Tic Tac Toe game built with JavaScript, HTML and CSS
+# Tic Tac Toe
+
+Browser-based Tic Tac Toe game built with JavaScript.
+
+## 🔧 Technologies
+- HTML
+- CSS
+- JavaScript
+
+## ⚙️ Features
+- Game logic implementation
+- Winner detection
+- User interaction handling
